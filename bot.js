@@ -32,8 +32,7 @@ client.on('ready', function (evt) {
 
 
 client.on('message', msg => {
-	// Our client needs to know if it will execute a command
-	// It will listen for messages that will start with `!`
+	//based on the command in settings.prompt:
 	if (msg.content.substring(0, 1) == settings.prompt) {
 		var args = msg.content.substring(1).split(' ');
 		var allArgs = msg.content.split(' ');

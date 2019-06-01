@@ -1,8 +1,13 @@
+/***************************************
+* ToolBoxBot
+* by Nick Newell
+****************************************/
+const globalSettingsPath = './settings/settings.json';
+const globalTimerPath = './timers';
+const version = "1.1.0";
+var settings = {};
+
 console.log('[LOG] - starting server...');
-
-
-var globalSettingsPath = './settings/settings.json';
-var globalTimerPath = './timers'
 
 //external modules
 const fs = require('fs');
@@ -12,22 +17,20 @@ var Discord = require('discord.js');
 // Initialize Discord client
 const client = new Discord.Client();
 
+//Initialize server settings from file
+init();
+
+//Useful console log headers:
 //console.log('[DEBUG]');
 //console.log('[MOD]');
 //console.log('[LOG]');
 
-//Initialize server settings from file
-var settings;
-reloadSettingsData();
-console.log('[LOG] - After settings init');
-
 client.on('ready', function (evt) {
     console.log('[LOG] - Connected');
     console.log('Logged in as: ' + client.user.tag);
-    //console.log(client.user.tag);
 });
 
-//client.on('message', function (user, userID, channelID, message, evt) {
+
 client.on('message', msg => {
 	// Our client needs to know if it will execute a command
 	// It will listen for messages that will start with `!`
@@ -47,25 +50,20 @@ client.on('message', msg => {
 				break;
 			case 'change':
 				var oldPrompt = settings.prompt;
-				if(allArgs[1] != null) {
-					fs.readFile(globalSettingsPath, 'utf8', function readFileCallback(err, data){
-						if (err) { console.log(err); } 
-						else {
-							var obj = JSON.parse(data); //now it an object
-							obj["prompt"] = allArgs[1];
-							var json = JSON.stringify(obj); //now it json again
-							
-							fs.writeFile(globalSettingsPath, json, 'utf8', function callback(){
-								reloadSettingsData();
-								console.log('[MOD] - args changed from ' + oldPrompt + ' to ' + allArgs[1]);
-								msg.reply('prompt changed to \'' + allArgs[1] + '\' !');
-							}); //write back and callback
-						}
-					});
+				
+				if((allArgs.length < 3) && (allArgs[1] != null)) {
+					settings.prompt = allArgs[1];
+					var json = JSON.stringify(settings);
+					
+					fs.writeFile(globalSettingsPath, json, 'utf8', function callback(){
+						reloadSettingsData();
+						console.log('[MOD] - args changed from ' + oldPrompt + ' to ' + allArgs[1]);
+						msg.reply('prompt changed to \'' + allArgs[1] + '\' !');
+					}); //write back and callback
 				}
 				else {
-					console.log('[MOD] - arg change attempted from ' + oldPrompt + ' to ' + allArgs[1]);
-					msg.reply('prompt change failed. ' + allArgs[1] + 'is invalid.');
+					console.log('[MOD] - arg change attempted: ' + oldPrompt + ' to ' + allArgs[1] + ', via ' + allArgs);
+					msg.reply('prompt change failed. Input is invalid.');
 				}
 				break;
 			case 'help':
@@ -89,7 +87,35 @@ client.on('message', msg => {
 client.login('NTg0NDY1NTIzMDM5Nzk3MjU4.XPLbJw.hqryz-U7rJlU_quatHNYLobBCac');
 
 
+
+
 //functions
+function init() {
+	fs.readFile(globalSettingsPath, 'utf8', function readFileCallback(err, data){
+		if (err) { console.log(err); } 
+		else {
+			data = JSON.parse(data);
+			
+			if(data.version == null) {
+				settings.version = version;
+				if(data.creator == null) { settings.creator = "Nick Newell"; }
+				if(data.prompt  == null) { settings.prompt = "!"; }
+
+				var json = JSON.stringify(settings);
+				
+				fs.writeFile(globalSettingsPath, json, 'utf8', function callback(){
+					console.log('[MOD] - add default params');
+					reloadSettingsData();
+				}); //write back and callback
+			}
+			else {
+				console.log('[LOG] - params already set');
+				reloadSettingsData();
+			}
+		}
+	});
+}
+
 function reloadSettingsData() {
 	fs.readFile(globalSettingsPath, 'utf8', function readFileCallback(err, data){
 		if (err) { console.log(err); } 

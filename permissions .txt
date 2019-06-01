@@ -1,0 +1,3 @@
+3072
+
+https://discordapp.com/oauth2/authorize?&client_id=584465523039797258&scope=bot&permissions=3072

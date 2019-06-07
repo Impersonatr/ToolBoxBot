@@ -47,6 +47,30 @@ client.on('message', msg => {
 			case 'pingme':
 				msg.reply('pong you');
 				break;
+			case 'Rail':
+				var epoch = 1559811600000;
+				var magic = 1.03746397695;
+				var start = new Date(epoch);
+				var now = new Date;
+				var diff = now - start;
+				var newDate = new Date(epoch + (diff*magic));
+				
+				var incidentembed = new Discord.RichEmbed()
+					.setTitle("Date and Time for Rail")
+					//.setDescription("")
+					.addField("The time is:", String(newDate), true)
+					.setColor("#FFFFFF")
+					.setTimestamp()
+				
+				msg.channel.send(incidentembed);
+				break;
+				
+			case 'about':
+				msg.channel.send('This bot was created by ' + settings.creator + '. It was intended as a test, initially. "Could I create a bot that could do X?" '
+					+ 'He decided to expand on it, and thus ToolBoxBot was created.\n\n'
+					+ 'If you have feature requests or suggestions, send them his way. He\'s always looking for a challenge.'
+				);
+				break;
 			case 'change':
 				var oldPrompt = settings.prompt;
 				
@@ -69,6 +93,7 @@ client.on('message', msg => {
 				msg.channel.send('Valid commands include:\n' +
 					"   - ping\n" +
 					"   - pingme\n" +
+					"   - about\n" +
 					"   - change\n"
 				);
 				break;
@@ -77,13 +102,14 @@ client.on('message', msg => {
 				msg.channel.send('Valid commands include:\n' +
 					"   - ping\n" +
 					"   - pingme\n" +
+					"   - about\n" +
 					"   - change\n"
 				);
 		}
 	}
 });
 
-client.login('NTg0NDY1NTIzMDM5Nzk3MjU4.XPLbJw.hqryz-U7rJlU_quatHNYLobBCac');
+client.login('NTg2NDIyOTI4ODQ2MDk0MzQ5.XPnzRg.WwqGIuOBzrluHwX4yGqhNhFpueA');
 
 
 
@@ -101,7 +127,7 @@ function init() {
 				if(data.prompt  == null) { settings.prompt = "!"; }
 
 				var json = JSON.stringify(settings);
-				
+
 				fs.writeFile(globalSettingsPath, json, 'utf8', function callback(){
 					console.log('[MOD] - add default params');
 					reloadSettingsData();

@@ -4,7 +4,7 @@
 ****************************************/
 const globalSettingsPath = './settings/settings.json';
 const globalTimerPath = './timers';
-const version = "1.1.0";
+const version = "1.2.0";
 var settings = {};
 
 console.log('[LOG] - starting server...');
@@ -44,9 +44,11 @@ client.on('message', msg => {
 			case 'ping':
 				msg.channel.send('pong!');
 				break;
+				
 			case 'pingme':
 				msg.reply('pong you');
 				break;
+				
 			case 'Rail':
 				var epoch = 1559811600000;
 				var magic = 1.03746397695;
@@ -71,6 +73,7 @@ client.on('message', msg => {
 					+ 'If you have feature requests or suggestions, send them his way. He\'s always looking for a challenge.'
 				);
 				break;
+				
 			case 'change':
 				var oldPrompt = settings.prompt;
 				
@@ -89,6 +92,7 @@ client.on('message', msg => {
 					msg.reply('prompt change failed. Input is invalid.');
 				}
 				break;
+				
 			case 'help':
 				msg.channel.send('Valid commands include:\n' +
 					"   - ping\n" +
@@ -97,6 +101,7 @@ client.on('message', msg => {
 					"   - change\n"
 				);
 				break;
+				
 			default:
 				msg.reply('Unrecognized command');
 				msg.channel.send('Valid commands include:\n' +

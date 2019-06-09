@@ -13,6 +13,7 @@ console.log('[LOG] - starting server...');
 const fs = require('fs');
 const path = require('path');
 var Discord = require('discord.js');
+var Key = require('./settings/key.json');
 
 // Initialize Discord client
 const client = new Discord.Client();
@@ -114,7 +115,8 @@ client.on('message', msg => {
 	}
 });
 
-client.login('NTg2NDIyOTI4ODQ2MDk0MzQ5.XPnzRg.WwqGIuOBzrluHwX4yGqhNhFpueA');
+//client.login('NTg2NDIyOTI4ODQ2MDk0MzQ5.XPnzRg.WwqGIuOBzrluHwX4yGqhNhFpueA');
+client.login(Key.key);
 
 
 

@@ -4,7 +4,7 @@
 ****************************************/
 const globalSettingsPath = './settings/settings.json';
 const globalTimerPath = './timers';
-const version = "1.2.0";
+const version = "1.2.5";
 var settings = {};
 
 console.log('[LOG] - starting server...');
@@ -123,6 +123,11 @@ client.login(Key.key);
 
 //functions
 function init() {
+	fs.writeFile(globalSettingsPath, "{}", { flag: 'wx' }, function (err) {
+		if (err) { console.log("[INIT] - Settings file already exists"); };
+		console.log("[INIT] - Settings file created");
+	});
+	
 	fs.readFile(globalSettingsPath, 'utf8', function readFileCallback(err, data){
 		if (err) { console.log(err); } 
 		else {
@@ -136,12 +141,12 @@ function init() {
 				var json = JSON.stringify(settings);
 
 				fs.writeFile(globalSettingsPath, json, 'utf8', function callback(){
-					console.log('[MOD] - add default params');
+					console.log('[INIT] - add default params');
 					reloadSettingsData();
 				}); //write back and callback
 			}
 			else {
-				console.log('[LOG] - params already set');
+				console.log('[INIT] - params already set');
 				reloadSettingsData();
 			}
 		}

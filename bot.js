@@ -115,7 +115,7 @@ client.on('message', msg => {
 	}
 });
 
-//client.login('NTg2NDIyOTI4ODQ2MDk0MzQ5.XPnzRg.WwqGIuOBzrluHwX4yGqhNhFpueA');
+
 client.login(Key.key);
 
 

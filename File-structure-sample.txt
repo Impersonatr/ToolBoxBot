@@ -1,0 +1,26 @@
+{
+	"User": [
+		{
+			Name:"",
+			Time:datetime,
+			Reminders:[]
+		},
+		{
+			Name:"",
+			Time:datetime,
+			Reminders:[]
+		}
+	],
+	"User": [
+		{
+			Name:"",
+			Time:datetime,
+			Reminders:[]
+		},
+		{
+			Name:"",
+			Time:datetime,
+			Reminders:[]
+		}
+	]
+}

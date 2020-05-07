@@ -5,7 +5,7 @@
 const globalSettingsPath = './settings/settings.json';
 const globalTimerPath = './timers';
 const globalLogPath = './settings/ToolBoxBot.log'
-const version = "1.2.5";
+const version = "1.3.0";
 var settings = {};
 
 console.log('[LOG] - starting server...');
@@ -122,6 +122,37 @@ client.login(Key.key);
 
 
 
+//client.on logging
+client.on('debug', function (evt) {
+    fs.appendFile(globalLogPath, '\n\n--' + getDateFormatted('now') + ': Debug\n' + evt, function (err) {
+		if (err) { console.log("[LOG] - Error writing DEBUG event to log"); };
+	});
+});
+
+client.on('warn', function (evt) {
+    fs.appendFile(globalLogPath, '\n\n--' + getDateFormatted('now') + ': Warn\n' + evt, function (err) {
+		if (err) { console.log("[LOG] - Error writing WARN event to log"); };
+	});
+});
+
+client.on('error', function (evt) {
+    fs.appendFile(globalLogPath, '\n\n--' + getDateFormatted('now') + ': Error\n' + evt, function (err) {
+		if (err) { console.log("[LOG] - Error writing ERROR event to log"); };
+	});
+});
+
+client.on('disconnected', function (evt) {
+    fs.appendFile(globalLogPath, '\n\n--' + getDateFormatted('now') + ': Disconnected\n' + evt, function (err) {
+		if (err) { console.log("[LOG] - Error writing DISCONNECTED event to log"); };
+	});
+});
+
+client.on('raw', function (evt) {
+    fs.appendFile(globalLogPath, '\n\n--' + getDateFormatted('now') + ': Raw\n' + evt, function (err) {
+		if (err) { console.log("[LOG] - Error writing RAW event to log"); };
+	});
+});
+
 //functions
 function init() {
 	fs.writeFile(globalSettingsPath, "{}", { flag: 'wx' }, function (err) {
@@ -129,8 +160,9 @@ function init() {
 		console.log("[INIT] - Settings file created");
 	});
 	
-	fs.appendFile(globalLogPath, '\n--' + getDateFormatted('now') + ':\n\n', function (err) {
-		console.log(err);
+	fs.appendFile(globalLogPath, '\n\n--' + getDateFormatted('now') + ': STARTUP--\n\n', function (err) {
+		if (err) { console.log("[INIT] - Error writing initial entry to log"); };
+		console.log("[INIT] - Startup log entry written");
 	});
 	
 	fs.readFile(globalSettingsPath, 'utf8', function readFileCallback(err, data){
@@ -138,7 +170,7 @@ function init() {
 		else {
 			data = JSON.parse(data);
 			
-			if(data.version == null) {
+			if(data.version != version) {
 				settings.version = version;
 				if(data.creator == null) { settings.creator = "Nick Newell"; }
 				if(data.prompt  == null) { settings.prompt = "!"; }
@@ -146,7 +178,7 @@ function init() {
 				var json = JSON.stringify(settings);
 
 				fs.writeFile(globalSettingsPath, json, 'utf8', function callback(){
-					console.log('[INIT] - add default params');
+					console.log('[MOD][INIT] - default params changed');
 					reloadSettingsData();
 				}); //write back and callback
 			}

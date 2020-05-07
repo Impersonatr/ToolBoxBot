@@ -4,6 +4,7 @@
 ****************************************/
 const globalSettingsPath = './settings/settings.json';
 const globalTimerPath = './timers';
+const globalLogPath = './settings/ToolBoxBot.log'
 const version = "1.2.5";
 var settings = {};
 
@@ -128,6 +129,10 @@ function init() {
 		console.log("[INIT] - Settings file created");
 	});
 	
+	fs.appendFile(globalLogPath, '\n--' + getDateFormatted('now') + ':\n\n', function (err) {
+		console.log(err);
+	});
+	
 	fs.readFile(globalSettingsPath, 'utf8', function readFileCallback(err, data){
 		if (err) { console.log(err); } 
 		else {
@@ -162,4 +167,29 @@ function reloadSettingsData() {
 			console.log(settings);
 		}
 	});
+}
+
+function getDateFormatted(when) {
+	if (when == 'now') {
+		var d = new Date(),
+			month = '' + (d.getMonth() + 1),
+			day = '' + d.getDate(),
+			year = d.getFullYear(),
+			hour = d.getHours(),
+			minute = d.getMinutes();
+
+		if (month.length < 2) 
+			month = '0' + month;
+		if (day.length < 2) 
+			day = '0' + day;
+
+		return [day, month, year, hour, minute].join('-');
+	}
+	else return "other dates not yet supported: " + when;
+}
+
+function keepAlive() {
+	console.log('[LOG] - KeepAlive Active');
+	
+	//sleep?
 }

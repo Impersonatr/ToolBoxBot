@@ -173,11 +173,10 @@ function init() {
 			settings.version = version;
 			settings.creator = data.creator || "Nick Newell";
 			settings.prompt = data.prompt || "!";
-			
 			console.log('[INIT] - params set');
 			
+			var json = JSON.stringify(settings);
 			fs.writeFile(globalSettingsPath, json, 'utf8', function callback(){ reloadSettingsData(); });
-			
 		}
 	});
 }

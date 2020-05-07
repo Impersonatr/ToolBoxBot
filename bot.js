@@ -170,7 +170,7 @@ function init() {
 		else {
 			data = JSON.parse(data);
 			
-			if(data.version != version) {
+			if(data.version == null) {
 				settings.version = version;
 				if(data.creator == null) { settings.creator = "Nick Newell"; }
 				if(data.prompt  == null) { settings.prompt = "!"; }
@@ -178,9 +178,19 @@ function init() {
 				var json = JSON.stringify(settings);
 
 				fs.writeFile(globalSettingsPath, json, 'utf8', function callback(){
-					console.log('[MOD][INIT] - default params changed');
+					console.log('[INIT] - add default params');
 					reloadSettingsData();
 				}); //write back and callback
+			}
+			else if(data.version != version) {
+				console.log('[MOD][INIT] - version change');
+				settings.version = version;
+				
+				settings.creator = data.creator;
+				settings.prompt = data.prompt;
+				
+				var json = JSON.stringify(settings);
+				fs.writeFile(globalSettingsPath, json, 'utf8', function callback(){ reloadSettingsData(); });
 			}
 			else {
 				console.log('[INIT] - params already set');
